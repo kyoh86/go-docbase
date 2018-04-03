@@ -25,7 +25,7 @@ type PostListOptions struct {
 // List posts in a domain.
 //
 // Docbase API docs: https://help.docbase.io/posts/92984
-func (s *PostService) List(ctx context.Context, domain string, opt *PostListOptions) ([]Post, *Response, error) {
+func (s *PostService) List(ctx context.Context, domain Domain, opt *PostListOptions) ([]Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts", domain)
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -53,7 +53,7 @@ func (s *PostService) List(ctx context.Context, domain string, opt *PostListOpti
 // Get a single post.
 //
 // Docbase API docs: https://help.docbase.io/posts/97204
-func (s *PostService) Get(ctx context.Context, domain string, id int64) (*Post, *Response, error) {
+func (s *PostService) Get(ctx context.Context, domain Domain, id PostID) (*Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts/%v", domain, id)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
@@ -82,7 +82,7 @@ type CreatePostOptions struct {
 // Create a post for a domain.
 //
 // Docbase API docs: https://help.docbase.io/posts/92980
-func (s *PostService) Create(ctx context.Context, domain string, post *CreatePostOptions) (*Post, *Response, error) {
+func (s *PostService) Create(ctx context.Context, domain Domain, post *CreatePostOptions) (*Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts", domain)
 	req, err := s.client.NewRequest("POST", u, post)
 	if err != nil {
@@ -101,7 +101,7 @@ func (s *PostService) Create(ctx context.Context, domain string, post *CreatePos
 // Edit a post.
 //
 // Docbase API docs: https://help.docbase.io/posts/92981
-func (s *PostService) Edit(ctx context.Context, domain string, id int64, post *Post) (*Post, *Response, error) {
+func (s *PostService) Edit(ctx context.Context, domain Domain, id PostID, post *Post) (*Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts/%v", domain, id)
 	req, err := s.client.NewRequest("PATCH", u, post)
 	if err != nil {
@@ -120,7 +120,7 @@ func (s *PostService) Edit(ctx context.Context, domain string, id int64, post *P
 // Delete a post.
 //
 // Docbase API docs: https://help.docbase.io/posts/92982
-func (s *PostService) Delete(ctx context.Context, domain string, id int64) (*Response, error) {
+func (s *PostService) Delete(ctx context.Context, domain Domain, id PostID) (*Response, error) {
 	u := fmt.Sprintf("teams/%v/posts/%v", domain, id)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

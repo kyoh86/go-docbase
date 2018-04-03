@@ -7,10 +7,13 @@ type Post struct {
 	CreatedAt string    `json:"created_at"`
 	Draft     bool      `json:"draft"`
 	Groups    []Group   `json:"groups"`
-	ID        int64     `json:"id"`
+	ID        PostID    `json:"id"`
 	Scope     string    `json:"scope"`
 	Tags      []Tag     `json:"tags"`
 	Title     string    `json:"title"`
 	URL       string    `json:"url"`
 	User      User      `json:"user"`
 }
+
+// PostID specifies a post id for some API parameters.
+type PostID int64

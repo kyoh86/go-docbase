@@ -76,6 +76,9 @@ type ListOptions struct {
 	PerPage int `url:"per_page,omitempty"`
 }
 
+// Domain specifies a team domain for some API parameters.
+type Domain string
+
 // UploadOptions specifies the parameters to methods that support uploads.
 type UploadOptions struct {
 	Name string `url:"name,omitempty"`

@@ -18,7 +18,7 @@ type GroupListOptions struct {
 // List groups for a domain.
 //
 // Docbase API docs: https://help.docbase.io/posts/92978
-func (s *GroupService) List(ctx context.Context, domain string, opt *GroupListOptions) ([]*Group, *Response, error) {
+func (s *GroupService) List(ctx context.Context, domain Domain, opt *GroupListOptions) ([]*Group, *Response, error) {
 	u := fmt.Sprintf("teams/%v/groups", domain)
 	u, err := addOptions(u, opt)
 	if err != nil {

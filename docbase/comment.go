@@ -18,7 +18,7 @@ type CommentListOptions struct {
 // Create a comment for a post.
 //
 // Docbase API docs: https://help.docbase.io/posts/216289
-func (s *CommentService) Create(ctx context.Context, domain, postID int64, comment *Comment) (*Comment, *Response, error) {
+func (s *CommentService) Create(ctx context.Context, domain Domain, postID PostID, comment *Comment) (*Comment, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts/%v/comments", domain, postID)
 	req, err := s.client.NewRequest("POST", u, comment)
 	if err != nil {
@@ -37,7 +37,7 @@ func (s *CommentService) Create(ctx context.Context, domain, postID int64, comme
 // Delete a comment.
 //
 // Docbase API docs: https://help.docbase.io/posts/216290
-func (s *CommentService) Delete(ctx context.Context, domain, id int64) (*Response, error) {
+func (s *CommentService) Delete(ctx context.Context, domain Domain, id PostID) (*Response, error) {
 	u := fmt.Sprintf("teams/%v/comments/%v", domain, id)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

@@ -18,7 +18,7 @@ type TagListOptions struct {
 // List tags for a domain.
 //
 // Docbase API docs: https://help.docbase.io/posts/92979
-func (s *TagService) List(ctx context.Context, domain string, opt *TagListOptions) ([]*Tag, *Response, error) {
+func (s *TagService) List(ctx context.Context, domain Domain, opt *TagListOptions) ([]*Tag, *Response, error) {
 	u := fmt.Sprintf("teams/%v/tags", domain)
 	u, err := addOptions(u, opt)
 	if err != nil {
