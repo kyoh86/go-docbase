@@ -84,8 +84,8 @@ type CreatePostOptions struct {
 	Notice bool      `json:"notice,omitempty"`
 
 	// Parameters that only owners can use.
-	AuthorID    UserID    `json:"author_id,omitempty"`
-	PublishedAt time.Time `json:"published_at,omitempty"`
+	AuthorID    *UserID    `json:"author_id,omitempty"`
+	PublishedAt *time.Time `json:"published_at,omitempty"`
 }
 
 // Create a post for a domain.
