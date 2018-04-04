@@ -3,6 +3,7 @@ package docbase
 import (
 	"context"
 	"fmt"
+	"time"
 )
 
 // PostService handles communication with the Post related
@@ -71,12 +72,20 @@ func (s *PostService) Get(ctx context.Context, domain Domain, id PostID) (*Post,
 
 // CreatePostOptions represents a Docbase Post.
 type CreatePostOptions struct {
-	Body   string   `json:"body"`
-	Draft  bool     `json:"draft"`
-	Groups []Group  `json:"groups"`
-	Scope  string   `json:"scope"`
-	Tags   []string `json:"tags"`
-	Title  string   `json:"title"`
+	// Required.
+	Title string `json:"title"`
+	Body  string `json:"body"`
+
+	// Option.
+	Draft  bool      `json:"draft,omitempty"`
+	Groups []GroupID `json:"groups,omitempty"`
+	Scope  Scope     `json:"scope,omitempty"`
+	Tags   []string  `json:"tags,omitempty"`
+	Notice bool      `json:"notice,omitempty"`
+
+	// Parameters that only owners can use.
+	AuthorID    UserID    `json:"author_id,omitempty"`
+	PublishedAt time.Time `json:"published_at,omitempty"`
 }
 
 // Create a post for a domain.
