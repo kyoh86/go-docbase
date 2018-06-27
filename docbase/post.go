@@ -110,7 +110,7 @@ func (s *PostService) Create(ctx context.Context, domain Domain, post *CreatePos
 // Edit a post.
 //
 // Docbase API docs: https://help.docbase.io/posts/92981
-func (s *PostService) Edit(ctx context.Context, domain Domain, id PostID, post *Post) (*Post, *Response, error) {
+func (s *PostService) Edit(ctx context.Context, domain Domain, id PostID, post *PostEditRequest) (*Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts/%v", domain, id)
 	req, err := s.client.NewRequest("PATCH", u, post)
 	if err != nil {
@@ -124,6 +124,16 @@ func (s *PostService) Edit(ctx context.Context, domain Domain, id PostID, post *
 	}
 
 	return g, resp, nil
+}
+
+// PostEditRequest represents a request body for `Edit` function.
+type PostEditRequest struct {
+	Body   *string   `json:"body,omitempty"`
+	Draft  *bool     `json:"draft,omitempty"`
+	Groups []GroupID `json:"groups,omitempty"`
+	Scope  *Scope    `json:"scope,omitempty"`
+	Tags   []string  `json:"tags,omitempty"`
+	Title  *string   `json:"title,omitempty"`
 }
 
 // Delete a post.
