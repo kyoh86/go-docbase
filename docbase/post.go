@@ -21,11 +21,11 @@ type PostListOptions struct {
 	ListOptions
 }
 
-// TODO: QueryBuilder
-
 // List posts in a domain.
+// To build query, use PostQueryXXX functions.
 //
 // Docbase API docs: https://help.docbase.io/posts/92984
+// Docbase query docs: https://help.docbase.io/posts/59432
 func (s *PostService) List(ctx context.Context, domain Domain, opt *PostListOptions) ([]Post, *Response, error) {
 	u := fmt.Sprintf("teams/%v/posts", domain)
 	u, err := addOptions(u, opt)
