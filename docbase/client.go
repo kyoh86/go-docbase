@@ -42,8 +42,7 @@ var (
 
 // A Client manages communication with the Docbase API.
 type Client struct {
-	clientMu sync.Mutex   // clientMu protects the client during calls that modify the CheckRedirect func.
-	client   *http.Client // HTTP client used to communicate with the API.
+	client *http.Client // HTTP client used to communicate with the API.
 
 	// User agent used when communicating with the Docbase API.
 	UserAgent string
@@ -244,7 +243,9 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
-			io.Copy(w, resp.Body)
+			if _, err := io.Copy(w, resp.Body); err != nil {
+				return nil, err
+			}
 		} else {
 			decErr := json.NewDecoder(resp.Body).Decode(v)
 			if decErr == io.EOF {

@@ -38,7 +38,7 @@ type RateLimitError struct {
 func (r *RateLimitError) Error() string {
 	return fmt.Sprintf("%v %v: %d %+v %v",
 		r.Response.Request.Method, sanitizeURL(r.Response.Request.URL),
-		r.Response.StatusCode, r.Messages, formatRateReset(r.Rate.Reset.Time.Sub(time.Now())))
+		r.Response.StatusCode, r.Messages, formatRateReset(time.Until(r.Rate.Reset.Time)))
 }
 
 // sanitizeURL redacts the client_secret parameter from the URL which may be
@@ -100,7 +100,9 @@ func checkResponse(r *http.Response) error {
 	errorResponse := &ErrorResponse{Response: r}
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
-		json.Unmarshal(data, errorResponse)
+		if err := json.Unmarshal(data, errorResponse); err != nil {
+			return err
+		}
 	}
 	switch {
 	case r.StatusCode == http.StatusTooManyRequests:

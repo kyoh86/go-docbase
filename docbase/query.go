@@ -89,7 +89,7 @@ func PostQueryDate(property PostQueryDateName, year, month, day int) string {
 
 // PostQueryDateRange specifies the date range with property name to search posts
 func PostQueryDateRange(property PostQueryDateName, year1, month1, day1, year2, month2, day2 int) string {
-	return fmt.Sprintf("%s:%02d-%02d-%02d~%%2d-%02d-%02d", property, year1, month1, day1, year2, month2, day2)
+	return fmt.Sprintf("%s:%02d-%02d-%02d~%2d-%02d-%02d", property, year1, month1, day1, year2, month2, day2)
 }
 
 // PostQueryMissing specifies a property to search posts which is not filled
