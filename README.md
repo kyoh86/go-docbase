@@ -1,11 +1,9 @@
 # go-docbase
 
+A Go library for accessing the [Docbase](https://docbase
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/kyoh86/go-docbase)](https://goreportcard.com/report/github.com/kyoh86/go-docbase)
-[![CircleCI](https://img.shields.io/circleci/project/github/kyoh86/go-docbase.svg)](https://circleci.com/gh/kyoh86/go-docbase)
 [![Coverage Status](https://img.shields.io/codecov/c/github/kyoh86/go-docbase.svg)](https://codecov.io/gh/kyoh86/go-docbase)
-
-
-A Go library for accessing the [Docbase](https://docbase.io/) API v1.
 
 API Docs: https://help.docbase.io/posts/45703
 
