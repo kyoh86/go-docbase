@@ -56,7 +56,7 @@ jobs:
           path: .
       - name: take coverage
         run: go test -coverprofile=coverage.txt -covermode=count ./...
-      - uses: codecov/codecov-action@v1.0.3
+      - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage.txt
