@@ -63,7 +63,52 @@ func (s PropertyName) String() string {
 	return string(s)
 }
 
-// DateName specifies a property to search the keyword from posts
+// Title searches a keyword from title
+func Title(value string) string {
+	return Property(PropertyNameTitle, value)
+}
+
+// Body searches a keyword from body
+func Body(value string) string {
+	return Property(PropertyNameBody, value)
+}
+
+// Comments searches a keyword from comments
+func Comments(value string) string {
+	return Property(PropertyNameComments, value)
+}
+
+// Attachments searches a keyword from attachments
+func Attachments(value string) string {
+	return Property(PropertyNameAttachments, value)
+}
+
+// Author searches a keyword from author
+func Author(value string) string {
+	return Property(PropertyNameAuthor, value)
+}
+
+// CommentedBy searches a keyword from commented_by
+func CommentedBy(value string) string {
+	return Property(PropertyNameCommentedBy, value)
+}
+
+// LikedBy searches a keyword from liked_by
+func LikedBy(value string) string {
+	return Property(PropertyNameLikedBy, value)
+}
+
+// Tag searches a keyword from tag
+func Tag(value string) string {
+	return Property(PropertyNameTag, value)
+}
+
+// Group searches a keyword from group
+func Group(value string) string {
+	return Property(PropertyNameGroup, value)
+}
+
+// DateName specifies a proerty to search the keyword from posts
 type DateName string
 
 // Concrete properties to search the keyword from posts

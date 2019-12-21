@@ -31,19 +31,21 @@ client := docbase.NewClient(transport.Client())
 | --- | --- | --- | --- |
 | Post | List | ☑ | ☑ |
 | Post | Create | ☑ | ☑ |
-| Post | Get | ☑ | ☐ |
-| Post | Update | ☑ | ☐ |
-| Post | Archive | ☑ | ☐ |
-| Post | Unarchive | ☑ | ☐ |
-| Post | Delete | ☑ | ☐ |
+| Post | Get | ☑ | ☑ |
+| Post | Edit | ☑ | ☑ |
+| Post | Archive | ☑ | ☑ |
+| Post | Unarchive | ☑ | ☑ |
+| Post | Delete | ☑ | ☑ |
+| User | List | ☑ | ☐ |
 | Comment | Create | ☑ | ☐ |
 | Comment | Delete | ☑ | ☐ |
-| Attachment | Post | ☑ | ☐ |
+| Attachment | Upload | ☑ | ☐ |
 | Tag | List | ☑ | ☐ |
-| Group | Create | ☐ | ☐ |
+| Group | Create | ☑ | ☐ |
+| Group | Get | ☑ | ☐ |
 | Group | List | ☑ | ☐ |
-| Group | AddUser | ☐ | ☐ |
-| Group | RemoveUser | ☐ | ☐ |
+| Group | AddUsers | ☐ | ☐ |
+| Group | RemoveUsers | ☐ | ☐ |
 
 # LICENSE
 

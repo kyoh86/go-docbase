@@ -10,6 +10,7 @@ import (
 	"log"
 
 	"github.com/kyoh86/go-docbase/docbase"
+	"github.com/kyoh86/go-docbase/docbase/postquery"
 )
 
 func main() {
@@ -47,6 +48,7 @@ func main() {
 			Create("testTitle", "testBody").
 			Scope(docbase.ScopePrivate).
 			Notice(false).
+			Tags([]string{"go-docbase-test"}).
 			Do(context.Background())
 		fmt.Println(res.Response.StatusCode)
 		if err != nil {
@@ -56,7 +58,65 @@ func main() {
 		samplePost = *post
 	}
 	{
-		res, err := client.Post.Delete(context.Background(), samplePost.ID)
+		posts, res, err := client.
+			Post.
+			Get(samplePost.ID).
+			Do(context.Background())
+		fmt.Println(res.Response.StatusCode)
+		if err != nil {
+			_ = log.Output(0, err.Error())
+		}
+		fmt.Println(jsonify(posts))
+	}
+	{
+		posts, res, err := client.
+			Post.
+			Edit(samplePost.ID).
+			Body("testBody - updated").
+			Do(context.Background())
+		fmt.Println(res.Response.StatusCode)
+		if err != nil {
+			_ = log.Output(0, err.Error())
+		}
+		fmt.Println(jsonify(posts))
+	}
+	{
+		posts, res, err := client.
+			Post.
+			List().
+			Query(postquery.Title("testTitle")).
+			Do(context.Background())
+		fmt.Println(res.Response.StatusCode)
+		if err != nil {
+			_ = log.Output(0, err.Error())
+		}
+		fmt.Println(jsonify(posts))
+	}
+	{
+		res, err := client.
+			Post.
+			Archive(samplePost.ID).
+			Do(context.Background())
+		fmt.Println(res.Response.StatusCode)
+		if err != nil {
+			_ = log.Output(0, err.Error())
+		}
+	}
+	{
+		res, err := client.
+			Post.
+			Unarchive(samplePost.ID).
+			Do(context.Background())
+		fmt.Println(res.Response.StatusCode)
+		if err != nil {
+			_ = log.Output(0, err.Error())
+		}
+	}
+	{
+		res, err := client.
+			Post.
+			Delete(samplePost.ID).
+			Do(context.Background())
 		fmt.Println(res.Response.StatusCode)
 		if err != nil {
 			_ = log.Output(0, err.Error())

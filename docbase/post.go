@@ -259,7 +259,7 @@ func (d *postEditDoer) Do(ctx context.Context) (*Post, *Response, error) {
 
 // Archive a single post.
 //
-// Docbase API docs: https://help.docbase.io/posts/97204
+// Docbase API docs: https://help.docbase.io/posts/665804
 func (s *postService) Archive(id PostID) *postArchiveDoer {
 	return &postArchiveDoer{client: s.client, id: id}
 }
@@ -280,7 +280,7 @@ func (d *postArchiveDoer) Do(ctx context.Context) (*Response, error) {
 
 // Unarchive a single post.
 //
-// Docbase API docs: https://help.docbase.io/posts/97204
+// Docbase API docs: https://help.docbase.io/posts/665806
 func (s *postService) Unarchive(id PostID) *postUnarchiveDoer {
 	return &postUnarchiveDoer{client: s.client, id: id}
 }
@@ -293,6 +293,27 @@ type postUnarchiveDoer struct {
 func (d *postUnarchiveDoer) Do(ctx context.Context) (*Response, error) {
 	u := fmt.Sprintf("posts/%v/unarchive", d.id)
 	req, err := d.client.NewRequest("PUT", u, nil)
+	if err != nil {
+		return nil, err
+	}
+	return d.client.Do(ctx, req, nil)
+}
+
+// Delete a single post.
+//
+// Docbase API docs: https://help.docbase.io/posts/97982
+func (s *postService) Delete(id PostID) *postDeleteDoer {
+	return &postDeleteDoer{client: s.client, id: id}
+}
+
+type postDeleteDoer struct {
+	client *Client
+	id     PostID
+}
+
+func (d *postDeleteDoer) Do(ctx context.Context) (*Response, error) {
+	u := fmt.Sprintf("posts/%v", d.id)
+	req, err := d.client.NewRequest("DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}
