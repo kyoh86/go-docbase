@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path"
 	"reflect"
 	"strings"
 	"sync"
@@ -21,7 +22,7 @@ const (
 	host       = "api.docbase.io"
 	scheme     = "https"
 	userAgent  = "go-docbase"
-	apiVersion = "1"
+	apiVersion = "2"
 
 	headerToken         = "X-DocBaseToken"
 	headerVersion       = "X-Api-Version"
@@ -42,6 +43,7 @@ var (
 
 // A Client manages communication with the Docbase API.
 type Client struct {
+	domain string       // DocBase User Domain.
 	client *http.Client // HTTP client used to communicate with the API.
 
 	// User agent used when communicating with the Docbase API.
@@ -53,12 +55,12 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Docbase API.
-	Team       *TeamService
-	Tag        *TagService
-	Group      *GroupService
-	Post       *PostService
-	Comment    *CommentService
-	Attachment *AttachmentService
+	User       *userService
+	Tag        *tagService
+	Group      *groupService
+	Post       *postService
+	Comment    *commentService
+	Attachment *attachmentService
 }
 
 type service struct {
@@ -69,18 +71,10 @@ type service struct {
 // support pagination.
 type ListOptions struct {
 	// For paginated result sets, page of results to retrieve.
-	Page int `url:"page,omitempty"`
+	Page *int64 `url:"page,omitempty"`
 
 	// For paginated result sets, the number of results to include per page.
-	PerPage int `url:"per_page,omitempty"`
-}
-
-// Domain specifies a team domain for some API parameters.
-type Domain string
-
-// UploadOptions specifies the parameters to methods that support uploads.
-type UploadOptions struct {
-	Name string `url:"name,omitempty"`
+	PerPage *int64 `url:"per_page,omitempty"`
 }
 
 // addOptions adds the parameters in opt as URL query parameters to s. opt
@@ -106,22 +100,25 @@ func addOptions(s string, opt interface{}) (string, error) {
 }
 
 // NewClient returns a new Docbase API client. If a nil httpClient is
-// provided, http.DefaultClient will be used. To use API methods which require
-// authentication, provide an http.Client that will perform the authentication
-// for you (such as that provided by the golang.org/x/oauth2 library).
-func NewClient(httpClient *http.Client) *Client {
+// provided, http.DefaultClient will be used. But it is not authenticated,
+// using methods which requires authentication, raises error.
+// To use API methods which require authentication, provide an http.Client
+// that will perform the authentication for you (such as that provided by
+// the docbase.TokenTransport).
+func NewClient(domain string, httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
 	c := &Client{client: httpClient, UserAgent: userAgent}
+	c.domain = domain
 	c.common.client = c
-	c.Team = (*TeamService)(&c.common)
-	c.Tag = (*TagService)(&c.common)
-	c.Group = (*GroupService)(&c.common)
-	c.Post = (*PostService)(&c.common)
-	c.Comment = (*CommentService)(&c.common)
-	c.Attachment = (*AttachmentService)(&c.common)
+	c.User = (*userService)(&c.common)
+	c.Tag = (*tagService)(&c.common)
+	c.Group = (*groupService)(&c.common)
+	c.Post = (*postService)(&c.common)
+	c.Comment = (*commentService)(&c.common)
+	c.Attachment = (*attachmentService)(&c.common)
 	return c
 }
 
@@ -131,7 +128,7 @@ func NewClient(httpClient *http.Client) *Client {
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
 func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
-	u, err := baseURL.Parse(urlStr)
+	u, err := baseURL.Parse(path.Join("teams", c.domain, urlStr))
 	if err != nil {
 		return nil, err
 	}
@@ -162,36 +159,13 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 	return req, nil
 }
 
-// NewUploadRequest creates an upload request. A relative URL can be provided in
-// urlStr, in which case it is resolved relative to the UploadURL of the Client.
-// Relative URLs should always be specified without a preceding slash.
-func (c *Client) NewUploadRequest(urlStr string, reader io.Reader, size int64, mediaType string) (*http.Request, error) {
-	u, err := baseURL.Parse(urlStr)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", u.String(), reader)
-	if err != nil {
-		return nil, err
-	}
-	req.ContentLength = size
-
-	if mediaType == "" {
-		mediaType = contentTypeOctetStream
-	}
-	req.Header.Set("Content-Type", mediaType)
-	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Set(headerVersion, apiVersion)
-	return req, nil
-}
-
 // Response is a Docbase API response. This wraps the standard http.Response
 // returned from Docbase and provides convenient access to things like
 // pagination links.
 type Response struct {
 	*http.Response
 
+	Body bytes.Buffer
 	Meta
 	Rate
 }
@@ -231,6 +205,10 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	defer resp.Body.Close()
 
 	response := newResponse(resp)
+	var body bytes.Buffer
+	if _, err := io.Copy(&response.Body, io.TeeReader(resp.Body, &body)); err != nil {
+		return nil, err
+	}
 
 	c.rateMu.Lock()
 	c.rateLimit = response.Rate
@@ -243,11 +221,11 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
-			if _, err := io.Copy(w, resp.Body); err != nil {
+			if _, err := io.Copy(w, &body); err != nil {
 				return nil, err
 			}
 		} else {
-			decErr := json.NewDecoder(resp.Body).Decode(v)
+			decErr := json.NewDecoder(&body).Decode(v)
 			if decErr == io.EOF {
 				decErr = nil // ignore EOF errors caused by empty response body
 			}

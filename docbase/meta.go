@@ -29,17 +29,17 @@ func (m Meta) Previous() *ListOptions {
 	if err != nil {
 		return nil
 	}
-	n, err := strconv.Atoi(q.Get("page"))
+	n, err := strconv.ParseInt(q.Get("page"), 10, 64)
 	if err != nil {
 		return nil
 	}
-	p, err := strconv.Atoi(q.Get("per_page"))
+	p, err := strconv.ParseInt(q.Get("per_page"), 10, 64)
 	if err != nil {
 		return nil
 	}
 	return &ListOptions{
-		Page:    n,
-		PerPage: p,
+		Page:    &n,
+		PerPage: &p,
 	}
 }
 
@@ -57,16 +57,16 @@ func (m Meta) Next() *ListOptions {
 	if err != nil {
 		return nil
 	}
-	n, err := strconv.Atoi(q.Get("page"))
+	n, err := strconv.ParseInt(q.Get("page"), 10, 64)
 	if err != nil {
 		return nil
 	}
-	p, err := strconv.Atoi(q.Get("per_page"))
+	p, err := strconv.ParseInt(q.Get("per_page"), 10, 64)
 	if err != nil {
 		return nil
 	}
 	return &ListOptions{
-		Page:    n,
-		PerPage: p,
+		Page:    &n,
+		PerPage: &p,
 	}
 }

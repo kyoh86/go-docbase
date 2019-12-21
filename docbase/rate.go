@@ -10,10 +10,10 @@ import (
 // Rate represents the rate limit for the current client.
 type Rate struct {
 	// The number of requests per hour the client is currently limited to.
-	Limit int
+	Limit int64
 
 	// The number of remaining requests the client can make this hour.
-	Remaining int
+	Remaining int64
 
 	// The time at which the current rate limit will reset.
 	Reset Timestamp
@@ -31,7 +31,7 @@ func formatRateReset(d time.Duration) string {
 	if isNegative {
 		d *= -1
 	}
-	secondsTotal := int(0.5 + d.Seconds())
+	secondsTotal := int64(0.5 + d.Seconds())
 	minutes := secondsTotal / 60
 	seconds := secondsTotal - minutes*60
 
@@ -52,10 +52,10 @@ func formatRateReset(d time.Duration) string {
 func parseRate(r *http.Response) Rate {
 	var rate Rate
 	if limit := r.Header.Get(headerRateLimit); limit != "" {
-		rate.Limit, _ = strconv.Atoi(limit)
+		rate.Limit, _ = strconv.ParseInt(limit, 10, 64)
 	}
 	if remaining := r.Header.Get(headerRateRemaining); remaining != "" {
-		rate.Remaining, _ = strconv.Atoi(remaining)
+		rate.Remaining, _ = strconv.ParseInt(remaining, 10, 64)
 	}
 	if reset := r.Header.Get(headerRateReset); reset != "" {
 		if v, _ := strconv.ParseInt(reset, 10, 64); v != 0 {

@@ -43,3 +43,8 @@ func (t *TokenTransport) transport() http.RoundTripper {
 	}
 	return http.DefaultTransport
 }
+
+func NewAuthClient(domain, token string) *Client {
+	transport := TokenTransport{Token: token}
+	return NewClient(domain, transport.Client())
+}

@@ -2,36 +2,31 @@ package docbase
 
 import (
 	"context"
-	"fmt"
 )
 
-// TagService provides access to the installation related functions
+// tagService provides access to the installation related functions
 // in the Docbase API.
-type TagService service
-
-// TagListOptions specifies the optional parameters to the
-// TagService.List methods.
-type TagListOptions struct {
-	ListOptions
-}
+type tagService service
 
 // List tags for a domain.
 //
 // Docbase API docs: https://help.docbase.io/posts/92979
-func (s *TagService) List(ctx context.Context, domain Domain, opt *TagListOptions) ([]*Tag, *Response, error) {
-	u := fmt.Sprintf("teams/%v/tags", domain)
-	u, err := addOptions(u, opt)
+func (s *tagService) List() *tagListDoer {
+	return &tagListDoer{client: s.client}
+}
+
+type tagListDoer struct {
+	client *Client
+}
+
+func (d *tagListDoer) Do(ctx context.Context) ([]Tag, *Response, error) {
+	req, err := d.client.NewRequest("GET", "tags", nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var tags []*Tag
-	resp, err := s.client.Do(ctx, req, &tags)
+	var tags []Tag
+	resp, err := d.client.Do(ctx, req, &tags)
 	if err != nil {
 		return nil, resp, err
 	}

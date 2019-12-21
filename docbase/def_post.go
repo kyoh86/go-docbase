@@ -2,17 +2,21 @@ package docbase
 
 // Post represents a Docbase Post.
 type Post struct {
-	Body      string    `json:"body"`
-	Comments  []Comment `json:"comments"`
-	CreatedAt string    `json:"created_at"`
-	Draft     bool      `json:"draft"`
-	Groups    []Group   `json:"groups"`
-	ID        PostID    `json:"id"`
-	Scope     Scope     `json:"scope"`
-	Tags      []Tag     `json:"tags"`
-	Title     string    `json:"title"`
-	URL       string    `json:"url"`
-	User      User      `json:"user"`
+	ID            PostID    `json:"id"`
+	Title         string    `json:"title"`
+	Body          string    `json:"body"`
+	Draft         bool      `json:"draft"`
+	Archived      bool      `json:"archived"`
+	URL           string    `json:"url"`
+	CreatedAt     string    `json:"created_at"`
+	Scope         Scope     `json:"scope"`
+	SharingURL    string    `json:"sharing_url"`
+	Tags          []Tag     `json:"tags"`
+	User          User      `json:"user"`
+	StarsCount    int64       `json:"stars_count"`
+	GoodJobsCount int64       `json:"good_jobs_count"`
+	Comments      []Comment `json:"comments"`
+	Groups        []Group   `json:"groups"`
 }
 
 // PostID specifies a post id for some API parameters.

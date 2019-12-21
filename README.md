@@ -27,23 +27,23 @@ client := docbase.NewClient(transport.Client())
 
 ## API Coverage Status
 
-* ○: Implemented and tested.
-* △: Implementing.
-* ×: Not implemented.
-
 | Service | Function | Implemented | Tested |
 | --- | --- | --- | --- |
 | Post | List | ☑ | ☑ |
 | Post | Create | ☑ | ☑ |
 | Post | Get | ☑ | ☐ |
 | Post | Update | ☑ | ☐ |
+| Post | Archive | ☑ | ☐ |
+| Post | Unarchive | ☑ | ☐ |
 | Post | Delete | ☑ | ☐ |
 | Comment | Create | ☑ | ☐ |
 | Comment | Delete | ☑ | ☐ |
-| Team | List | ☑ | ☑ |
-| Group | List | ☑ | ☐ |
+| Attachment | Post | ☑ | ☐ |
 | Tag | List | ☑ | ☐ |
-| Attachment | Post | ☐ | ☐ |
+| Group | Create | ☐ | ☐ |
+| Group | List | ☑ | ☐ |
+| Group | AddUser | ☐ | ☐ |
+| Group | RemoveUser | ☐ | ☐ |
 
 # LICENSE
 
