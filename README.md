@@ -1,6 +1,6 @@
 # go-docbase
 
-A Go library for accessing the [Docbase](https://docbase
+A Go library for accessing the [Docbase](https://docbase.io)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kyoh86/go-docbase)](https://goreportcard.com/report/github.com/kyoh86/go-docbase)
 [![Coverage Status](https://img.shields.io/codecov/c/github/kyoh86/go-docbase.svg)](https://codecov.io/gh/kyoh86/go-docbase)
@@ -31,19 +31,19 @@ client := docbase.NewClient(transport.Client())
 * △: Implementing.
 * ×: Not implemented.
 
-| Service | Function | Status |
-| --- | --- | --- |
-| Post | List | ○ |
-| Post | Create | ○ |
-| Post | Get | △ |
-| Post | Update | △ |
-| Post | Delete | △ |
-| Comment | Create | △ |
-| Comment | Delete | △ |
-| Team | List | ○ |
-| Group | List | △ |
-| Tag | List | △ |
-| Attachment | Post | × |
+| Service | Function | Implemented | Tested |
+| --- | --- | --- | --- |
+| Post | List | ☑ | ☑ |
+| Post | Create | ☑ | ☑ |
+| Post | Get | ☑ | ☐ |
+| Post | Update | ☑ | ☐ |
+| Post | Delete | ☑ | ☐ |
+| Comment | Create | ☑ | ☐ |
+| Comment | Delete | ☑ | ☐ |
+| Team | List | ☑ | ☑ |
+| Group | List | ☑ | ☐ |
+| Tag | List | ☑ | ☐ |
+| Attachment | Post | ☐ | ☐ |
 
 # LICENSE
 
