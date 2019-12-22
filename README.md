@@ -20,10 +20,11 @@ import (
 	"github.com/kyoh86/go-docbase/docbase"
 )
 
-transport := docbase.TokenTransport{Token: "Your API Token"}
-client := docbase.NewClient(transport.Client())
+client := docbase.NewAuthClient("Your DocBase Domain", "Your API Token")
 ...
 ```
+
+And see [example](./cmd/go-docbase-sample/main.go).
 
 ## API Coverage Status
 
@@ -36,16 +37,16 @@ client := docbase.NewClient(transport.Client())
 | Post | Archive | ☑ | ☑ |
 | Post | Unarchive | ☑ | ☑ |
 | Post | Delete | ☑ | ☑ |
-| User | List | ☑ | ☐ |
-| Comment | Create | ☑ | ☐ |
-| Comment | Delete | ☑ | ☐ |
-| Attachment | Upload | ☑ | ☐ |
-| Tag | List | ☑ | ☐ |
-| Group | Create | ☑ | ☐ |
-| Group | Get | ☑ | ☐ |
-| Group | List | ☑ | ☐ |
-| Group | AddUsers | ☐ | ☐ |
-| Group | RemoveUsers | ☐ | ☐ |
+| User | List | ☑ | ☑ |
+| Comment | Create | ☑ | ☑ |
+| Comment | Delete | ☑ | ☑ |
+| Attachment | Upload | ☑ | ☑ |
+| Tag | List | ☑ | ☑ |
+| Group | Create | ☑ | ☑ |
+| Group | Get | ☑ | ☑ |
+| Group | List | ☑ | ☑ |
+| Group | AddUsers | ☑ | ☑ |
+| Group | RemoveUsers | ☑ | ☑ |
 
 # LICENSE
 
