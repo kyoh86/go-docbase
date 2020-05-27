@@ -33,7 +33,7 @@ And see [example](./cmd/go-docbase-sample/main.go).
 
 ```go
 import (
-	"github.com/kyoh86/go-docbase/docbase/v2"
+	"github.com/kyoh86/go-docbase/v2/docbase"
 )
 
 client := docbase.NewAuthClient("Your DocBase Domain", "Your API Token")
