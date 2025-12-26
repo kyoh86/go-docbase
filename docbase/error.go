@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -59,17 +59,17 @@ func sanitizeURL(uri *url.URL) *url.URL {
 An Error reports more details on an individual error in an ErrorResponse.
 These are the possible validation error codes:
 
-    missing:
-        resource does not exist
-    missing_field:
-        a required field on a resource has not been set
-    invalid:
-        the formatting of a field is invalid
-    already_exists:
-        another resource has the same valid as this field
-    custom:
-        some resources return this (e.g. github.User.CreateKey()), additional
-        information is set in the Message field of the Error
+	missing:
+	    resource does not exist
+	missing_field:
+	    a required field on a resource has not been set
+	invalid:
+	    the formatting of a field is invalid
+	already_exists:
+	    another resource has the same valid as this field
+	custom:
+	    some resources return this (e.g. github.User.CreateKey()), additional
+	    information is set in the Message field of the Error
 
 Docbase API docs: https://developer.github.com/v3/#client-errors
 */
@@ -98,14 +98,14 @@ func checkResponse(r *http.Response) error {
 		return nil
 	}
 	errorResponse := &ErrorResponse{Response: r}
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if err == nil && data != nil {
 		if err := json.Unmarshal(data, errorResponse); err != nil {
 			return err
 		}
 	}
-	switch {
-	case r.StatusCode == http.StatusTooManyRequests:
+	switch r.StatusCode {
+	case http.StatusTooManyRequests:
 		return &RateLimitError{
 			Rate:     parseRate(r),
 			Response: errorResponse.Response,
@@ -115,6 +115,7 @@ func checkResponse(r *http.Response) error {
 		return errorResponse
 	}
 }
+
 func sanitizeError(ctx context.Context, err error) error {
 	// If we got an error, and the context has been canceled,
 	// the context's error is probably more useful.

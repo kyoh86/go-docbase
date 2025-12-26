@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -33,12 +32,10 @@ const (
 	contentTypeOctetStream = "application/octet-stream"
 )
 
-var (
-	baseURL = url.URL{
-		Scheme: scheme,
-		Host:   host,
-	}
-)
+var baseURL = url.URL{
+	Scheme: scheme,
+	Host:   host,
+}
 
 // A Client manages communication with the Docbase API.
 type Client struct {
@@ -87,7 +84,7 @@ type UploadOptions struct {
 // must be a struct whose fields may contain "url" tags.
 func addOptions(s string, opt interface{}) (string, error) {
 	v := reflect.ValueOf(opt)
-	if v.Kind() == reflect.Ptr && v.IsNil() {
+	if v.Kind() == reflect.Pointer && v.IsNil() {
 		return s, nil
 	}
 
@@ -268,14 +265,14 @@ func (c *Client) checkRateLimitBeforeDo(req *http.Request) *RateLimitError {
 	c.rateMu.Lock()
 	rate := c.rateLimit
 	c.rateMu.Unlock()
-	if !rate.Reset.Time.IsZero() && rate.Remaining == 0 && time.Now().Before(rate.Reset.Time) {
+	if !rate.Reset.IsZero() && rate.Remaining == 0 && time.Now().Before(rate.Reset.Time) {
 		// Create a fake response.
 		resp := &http.Response{
 			Status:     http.StatusText(http.StatusForbidden),
 			StatusCode: http.StatusForbidden,
 			Request:    req,
 			Header:     make(http.Header),
-			Body:       ioutil.NopCloser(strings.NewReader("")),
+			Body:       io.NopCloser(strings.NewReader("")),
 		}
 		return &RateLimitError{
 			Rate:     rate,
