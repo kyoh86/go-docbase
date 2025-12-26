@@ -43,22 +43,3 @@ jobs:
           path: .
       - name: test race
         run: go test -v -race ./...
-
-  cover:
-    runs-on: ubuntu-latest
-    needs: vendor
-    steps:
-      - uses: actions/setup-go@v6
-        with:
-          go-version: 1.18.x
-      - uses: actions/download-artifact@v7
-        with:
-          name: repository
-          path: .
-      - name: take coverage
-        run: go test -coverprofile=coverage.txt -covermode=count ./...
-      - name: Send coverage
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          files: coverage.txt
